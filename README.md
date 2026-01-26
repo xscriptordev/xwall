@@ -33,4 +33,4 @@ Xwall is an interactive, aesthetic wallpaper generator that creates fluid, liqui
 
 ## License
 
-(MIT)[./LICENSE]
+[MIT](./LICENSE)

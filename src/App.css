@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: #FFD700;
+  /* Gold */
+  background-color: #1a0022;
+  /* Deep Purple */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.canvas-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  z-index: 2;
+  pointer-events: none;
+  background: rgba(44, 0, 62, 0.4);
+  padding: 12px 18px;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1em;
+  line-height: 1.0;
+  margin: 0;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+p {
+  color: #E6E6FA;
+  /* Lavender */
+  font-size: 1.0em;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.overlay>* {
+  pointer-events: auto;
+}
+
+.overlay a svg {
+  fill: white;
+  transition: fill 0.3s ease;
+}
+
+.overlay a:hover svg {
+  fill: #FFD700;
+}
+
+/* Customize Leva more deeply */
+div[id^="leva__root"]>div {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px !important;
+}
+
+.leva-c-hHlCcc {
+  /* Title bar */
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.custom-leva-wrapper button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(4px) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.2s ease !important;
+}
+
+.custom-leva-wrapper button:hover {
+  background: rgba(255, 215, 0, 0.2) !important;
+  /* Gold tint on hover */
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+}

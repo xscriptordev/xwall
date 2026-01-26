@@ -1,0 +1,13 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Custom mappings for file detection
+*.js linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+*.css linguist-language=CSS
+*.svg linguist-language=SVG
+
+# Mark docs as generated/vendored so it doesn't affect stats
+docs/** linguist-vendored
+dist/** linguist-vendored

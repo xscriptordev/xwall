@@ -18,7 +18,7 @@ Xwall is an interactive, aesthetic wallpaper generator that creates fluid, liqui
 - **High Performance**: Built with React Three Fiber and custom GLSL shaders.
 - **Export 4k**: Render and download high-resolution (3840x2160) images instantly.
 
-## In case toy want to try this locally:
+## In case you want to try this locally:
 
 1.  Install dependencies:
     ```bash

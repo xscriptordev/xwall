@@ -7,6 +7,17 @@ export default defineConfig({
   base: './', // Use relative paths for GitHub Pages
   build: {
     outDir: 'docs', // Output to docs/ for easy deployment
-    emptyOutDir: true
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 1000, // Three.js + Drei is naturally large (~800kb+)
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor_react': ['react', 'react-dom'],
+          'vendor_three': ['three', '@react-three/fiber'],
+          'vendor_extras': ['@react-three/drei', '@react-three/postprocessing', 'postprocessing'],
+          'vendor_ui': ['leva']
+        }
+      }
+    }
   }
 })

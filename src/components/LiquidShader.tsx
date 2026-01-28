@@ -24,7 +24,8 @@ const LiquidMaterial = shaderMaterial(
     uTransition: 0.0,
     uPixelation: 0.0,
     uDistortion: 1.0,
-    uRelief: 1.0
+    uRelief: 1.0,
+    uFlowVector: new THREE.Vector2(0, 0)
   },
   vertexShader,
   fragmentShader
@@ -47,11 +48,12 @@ interface LiquidShaderProps {
   pixelation: number
   distortion: number
   relief: number
+  flowVector: THREE.Vector2
 }
 
 export const LiquidShader = ({
   colors, seed, grain, speed, transition,
-  pixelation, distortion, relief
+  pixelation, distortion, relief, flowVector
 }: LiquidShaderProps) => {
   const ref = useRef<any>(null)
   const { viewport, size } = useThree()
@@ -73,6 +75,7 @@ export const LiquidShader = ({
       ref.current.uPixelation = pixelation
       ref.current.uDistortion = distortion
       ref.current.uRelief = relief
+      ref.current.uFlowVector = flowVector
     }
   })
 

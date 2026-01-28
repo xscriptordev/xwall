@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from 'react'
 import { LiquidShader } from './components/LiquidShader'
 import './App.css'
 import { encodeLSB, decodeLSB } from './utils/steganography'
+import { EffectComposer, Bloom, Vignette, ChromaticAberration, BrightnessContrast, HueSaturation } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+import * as THREE from 'three'
 
 const DEFAULT_PALETTE = [
   "#363537", // 0
@@ -97,6 +100,9 @@ function App() {
     grain, speed,
     pixelRatio,
     pixelation, distortion, relief,
+    // Add new controls
+    flowAngle, flowIntensity, bloomStr, bloomThresh, aberration, vignette,
+    saturation, brightness,
     overlayText, overlayPosition
   } = useControls('Settings', {
     color0: DEFAULT_PALETTE[0],
@@ -116,17 +122,34 @@ function App() {
     color14: DEFAULT_PALETTE[14],
     color15: DEFAULT_PALETTE[15],
     grain: { value: 0.12, min: 0.0, max: 0.3, step: 0.01, label: 'Texture' },
-    speed: { value: 0.15, min: 0.0, max: 1.0, step: 0.05, label: 'Flow' },
+    speed: { value: 0.15, min: 0.0, max: 3.0, step: 0.05, label: 'Speed' },
+    flowAngle: { value: 0, min: 0, max: 360, step: 1, label: 'Flow Direction' },
+    flowIntensity: { value: 0.0, min: 0.0, max: 2.0, step: 0.05, label: 'Flow Strength' },
     pixelRatio: { value: 1.5, min: 0.5, max: 3, step: 0.1, label: 'Quality' },
     pixelation: { value: 0.0, min: 0.0, max: 1.0, step: 0.01, label: 'Pixelation' },
     distortion: { value: 1.0, min: 0.0, max: 2.0, step: 0.01, label: 'Distortion' },
     relief: { value: 1.0, min: 0.0, max: 2.0, step: 0.01, label: 'Relief' },
+
+    // Post-Processing
+    bloomStr: { value: 0.0, min: 0.0, max: 3.0, step: 0.05, label: 'Bloom Intensity' },
+    bloomThresh: { value: 0.5, min: 0.0, max: 1.0, step: 0.01, label: 'Bloom Threshold' },
+    aberration: { value: 0.0, min: 0.0, max: 0.05, step: 0.001, label: 'Aberration' },
+    vignette: { value: 0.0, min: 0.0, max: 0.8, step: 0.01, label: 'Vignette' },
+    saturation: { value: 0.2, min: -1.0, max: 1.0, step: 0.05, label: 'Saturation' },
+    brightness: { value: 0.05, min: -0.5, max: 0.5, step: 0.01, label: 'Brightness' },
+
     overlayText: { value: '', label: 'Overlay Text' },
     overlayPosition: { options: { Center: 'center', Bottom: 'bottom' }, value: 'center', label: 'Position' },
     'Randomize & repaint': button(() => animateTransition()),
     'Export 4k': button(() => handleExport()),
     'Verify Signature': button(() => handleVerify())
   }, { collapsed: false })
+
+  // Calculate flow vector from angle and intensity
+  const flowVector = new THREE.Vector2(
+    Math.cos(flowAngle * Math.PI / 180) * flowIntensity,
+    Math.sin(flowAngle * Math.PI / 180) * flowIntensity
+  )
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -219,6 +242,7 @@ function App() {
 
       <div className="canvas-wrapper" ref={wrapperRef}>
         <Canvas
+          flat // Disable tone mapping to prevent washed out colors
           dpr={isExporting ? 2 : pixelRatio} // Higher pixel ratio for export
           gl={{
             antialias: true,
@@ -239,7 +263,15 @@ function App() {
             pixelation={pixelation}
             distortion={distortion}
             relief={relief}
+            flowVector={flowVector}
           />
+          <EffectComposer>
+            <Bloom luminanceThreshold={bloomThresh} intensity={bloomStr} levels={9} mipmapBlur />
+            <ChromaticAberration offset={[aberration, aberration]} />
+            <Vignette offset={0.3} darkness={vignette} eskil={false} blendFunction={BlendFunction.NORMAL} />
+            <HueSaturation saturation={saturation} hue={0} />
+            <BrightnessContrast brightness={brightness} contrast={0} />
+          </EffectComposer>
         </Canvas>
 
         {/* Text Overlay Preview */}

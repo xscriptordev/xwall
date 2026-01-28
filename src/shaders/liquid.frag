@@ -1,5 +1,4 @@
 
-
 uniform float uTime;
 uniform vec2 uResolution;
 uniform vec3 uColors[16];
@@ -9,6 +8,7 @@ uniform float uTransition;
 uniform float uPixelation; // 0.0 - 1.0
 uniform float uDistortion; // Multiplier
 uniform float uRelief;     // Multiplier
+uniform vec2 uFlowVector;  // x,y direction
 
 varying vec2 vUv;
 
@@ -108,13 +108,19 @@ void main() {
 
     // Domain warping
     vec2 q = vec2(0.);
-    q.x = fbm( st + 0.00*time );
-    q.y = fbm( st + vec2(1.0) );
+    
+    // Original Logic restored for base movement
+    // We only add flowOffset if it exists, otherwise strictly keep 0.00*time
+    vec2 flowOffset = uFlowVector * uTime * 0.5;
+    
+    q.x = fbm( st + 0.00 * time + flowOffset );
+    q.y = fbm( st + vec2(1.0) + flowOffset );
 
     vec2 r = vec2(0.);
     // Apply distortion multiplier to the feedback loop
-    r.x = fbm( st + (1.0 * distStr)*q + vec2(1.7,9.2)+0.15*time );
-    r.y = fbm( st + (1.0 * distStr)*q + vec2(8.3,2.8)+0.126*time );
+    // Ensure the time factors here (0.15 and 0.126) match the original EXACTLY for that specific chaotic swirl
+    r.x = fbm( st + (1.0 * distStr)*q + vec2(1.7,9.2) + 0.15*time + flowOffset );
+    r.y = fbm( st + (1.0 * distStr)*q + vec2(8.3,2.8) + 0.126*time + flowOffset );
 
     float f = fbm(st+r);
 
